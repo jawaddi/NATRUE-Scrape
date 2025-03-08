@@ -13,6 +13,7 @@ Before running the scraper, ensure you have the following:
 - **Google Cloud credentials set up**
 - **Service account JSON file downloaded and added to the project**
 - **Google Sheet created, with its name configured in the code**
+- **shere the google sheet with client_email Service account same for uploading docs to google drive**
 
 ## Installation & Setup
 
@@ -39,4 +40,7 @@ python script_name.py
 ```
 
 **Note:** Don't forget to uncomment the function in the individual scripts if you want to run them alone.
+          we used the one Service account for google sheets and google drive
+ 
+
 
