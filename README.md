@@ -3,9 +3,9 @@
 ## Overview
 NATRUE-Scrape is a Python-based web scraper designed to extract details about products, brands, and raw materials. The project consists of three scripts, each responsible for scraping specific data. You can either run them individually or execute all at once using `main.py`.
 
-products.py for scraping products
-brand.py for scraping brands
-raw_materials.py for scraping raw materials
+- **products.py for scraping products**
+- **brand.py for scraping brands**
+- **raw_materials.py for scraping raw materials**
 
 ## Requirements
 Before running the scraper, ensure you have the following:
