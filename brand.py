@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from driver_setup import setup_driver
 from data_saver import save_to_json, save_to_google_sheets
+import pycountry
 
 #Function to Extract Brand Details
 #
@@ -22,15 +23,20 @@ def extract_brand_details(product):
         image = None
     return name, image
 
-#Function to Extract Pop-up Details
+#Function to Extract Country from Description
+def extract_countries(text):
+    found_countries = [country.name for country in pycountry.countries if country.name in text]
+    return list(set(found_countries))  # Remove duplicates
 
+#Function to Extract Pop-up Details
 def extract_popup_details(driver):
     """Extracts product details from the pop-up dialog."""
     try:
         brand_description = driver.find_element(By.CLASS_NAME, "dialog-brand__description").text
     except NoSuchElementException:
         brand_description = None
-    return brand_description
+    countries = extract_countries(brand_description) if brand_description else []
+    return brand_description,countries
 
 
 #Function to Get Max Pages for a Letter
@@ -91,7 +97,7 @@ def scrape_page(driver, url):
                 print(f"⚠️ Pop-up did not appear for product {i + 1}. Skipping...")
                 continue
 
-            brand_description = extract_popup_details(driver)
+            brand_description,countries = extract_popup_details(driver)
 
             actions.send_keys(Keys.ESCAPE).perform()
             time.sleep(1)
@@ -99,7 +105,8 @@ def scrape_page(driver, url):
             scraped_data.append({
                 "Name": name,
                 "Image URL": image,
-                "Brand Description": brand_description
+                "Brand Description": brand_description,
+                "Countries": countries
             })
 
         except Exception as e:
@@ -110,14 +117,15 @@ def scrape_page(driver, url):
 #Function to Scrape Pages for a Letter
 def scrape_pages_for_letter(driver, base_url, letter):
     all_data = []
-    max_pages = get_max_pages(driver, letter, base_url)
+    encoded_letter = "%23" if letter == "#" else letter
+    max_pages = get_max_pages(driver, encoded_letter, base_url)
 
     if max_pages == 0:
         return all_data
 
     for page in range(1, max_pages + 1):
         print(f"Scraping Brands starting with {letter} (Page {page})...")
-        page_url = f"{base_url}&brands[pageNumber]={page}&brands[filters][letter]={letter}"
+        page_url = f"{base_url}&brands[pageNumber]={page}&brands[filters][letter]={encoded_letter}"
         scraped_data = scrape_page(driver, page_url)
 
         if not scraped_data:
@@ -151,11 +159,16 @@ def brand_scraping():
         # Scrape brands for all letters A-Z
         scraped_data = scrape_all_letters(driver, base_url)
         save_to_json(scraped_data, "Brands.json")
-        save_to_google_sheets(scraped_data, ["Name", "Image URL", "Brand Description"], "Brands_sheet")#make sure google sheet is exist before run this function
+
+        for entry in scraped_data:
+            if isinstance(entry["Countries"], list):
+               entry["Countries"] = ", ".join(entry["Countries"])  # Convert list to a string
+
+        save_to_google_sheets(scraped_data, ["Name", "Image URL", "Brand Description","Countries"], "Brands_sheet")#make sure google sheet is exist before run this function
     finally:
         driver.quit()
 
 # if we want to run only this piece of codde
-# brand_scraping()
+brand_scraping()
 
 
