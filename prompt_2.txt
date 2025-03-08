@@ -1,0 +1,1 @@
+Write a Python script that reads product, brand, and material data from JSON files, checks which products contain certain materials, and generates documentation files for each material. The script should save the files in an output directory and optionally upload them to Google Drive. Ensure proper error handling and file sanitization.

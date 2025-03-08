@@ -1,0 +1,49 @@
+task 1:
+1.	GPT Prompt
+
+help me to build a Python script to scrape data from the following webpages:
+
+1. **Products URL:** 
+   - URL: `https://natrue.org/our-standard/natrue-certified-world/?database[tab]=products`
+   - The page is dynamic with pagination.
+   - The product details are contained in the `<article class="product-list__item">` elements, and each product has an image, name, and brand.
+   - Some product details are hidden and require clicking on the product to open a pop-up dialog that contains additional information. The pop-up has the structure `<div role="dialog" class="el-dialog">` and contains details such as product certifications, brand, Manufacturer,and description.
+   
+2. **Brands URL:**
+   - URL: `https://natrue.org/our-standard/natrue-certified-world/?database[tab]=brands`
+   - The page is dynamic, and it contains brand logos and names in the `<article class="brand-list__item">` elements.
+   - You need to click on a brand to access its full description in a pop-up dialog with the structure `<div class="dialog-brand__description">`.
+   - The page also uses letters for filtering and pagination.
+
+3. **Raw Materials URL:**
+   - URL: `https://natrue.org/our-standard/natrue-certified-world/?database[tab]=raw-materials`
+   - This page contains an "Export" button that needs to be clicked to download the raw materials file (in Excel format).
+
+### Requirements:
+
+1. **For the Products URL:**
+   - Scrape product details (name, brand, certification, description, etc.).
+   - Click on each product to open the pop-up and scrape additional hidden data like certifications, ingredients, description, usage, brand, and manufacturer.
+
+2. **For the Brands URL:**
+   - Scrape the brand logo and name.
+   - Click on each brand to open the pop-up and scrape the description, contact info, and website.
+
+3. **For the Raw Materials URL:**
+   - Download the raw materials Excel file by clicking the "Export" button.
+   - Convert the downloaded Excel data into a JSON format and upload it to Google Sheets.
+
+### Data Storage and Export:
+- **Products and Brands Data:**
+  - Save the scraped data for products and brands in JSON format.
+  - Upload the JSON data to Google Sheets.
+  
+- **Raw Materials Data:**
+  - Convert the raw materials Excel data into JSON format and upload it to Google Sheets.
+
+### Additional Requirements:
+- The webpage uses dynamic content with pagination, so the script should handle multiple pages.
+- The script should be able to click on products and brands to access hidden data.
+- Handle potential errors like missing data or unavailable pop-ups.
+- Use best practices for scraping to avoid overloading the server .
+- Ensure that data is correctly saved in the appropriate Google Sheets format.
