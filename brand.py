@@ -169,6 +169,6 @@ def brand_scraping():
         driver.quit()
 
 # if we want to run only this piece of codde
-brand_scraping()
+# brand_scraping()
 
 
